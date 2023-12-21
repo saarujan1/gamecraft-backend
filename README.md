@@ -1,2 +1,2 @@
 # gamecraft-backend
-Python functions, npm
+Python functions
