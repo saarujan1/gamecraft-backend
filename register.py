@@ -28,6 +28,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     ))
 
     if items:
+        #check if userame exists
         return func.HttpResponse(body=json.dumps({"result": False, "msg": "Username already exists"}))
 
     try:
