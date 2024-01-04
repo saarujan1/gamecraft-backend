@@ -11,9 +11,9 @@ class test_submit_game(unittest.TestCase):
 
     def test_player_register(self):
         
-        payload = {'name': 'Luis', 'devName': 'UbiSoft', 'description': 'shooter', 'image': 'n/a'
-                   ,'options': 'fire, down, up', 'roadmap': 'roadmap', 'sharePrice': '$2', 
-                   'minThreshold': '10 votes', 'revenueSharing': '$5'
+        payload = {'name': 'LuisShooter234', 'devName': 'UbiSoft', 'description': 'shooter that takes place in chicago', 'image': 'n/a'
+                   ,'options': ["fire", "small", "down"], 'roadmap': 'roadmap', 'sharePrice': 2, 
+                   'minThreshold': '10 votes', 'revenueSharing': 12
                    , }
         json_payload = json.dumps(payload)
         response = requests.post(self.TEST_URL, data=json_payload)
