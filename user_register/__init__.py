@@ -7,10 +7,10 @@ import os
 
 MyCosmos = CosmosClient.from_connection_string(os.environ['AzureCosmosDBConnectionString'])
 PlayerDBProxy = MyCosmos.get_database_client(os.environ['DatabaseName'])
-PlayerContainerProxy = PlayerDBProxy.get_container_client(os.environ['PlayerContainer'])
+UserContainerProxy = PlayerDBProxy.get_container_client(os.environ['UserContainer'])
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Registering player')
+    logging.info('Registering user')
 
     player = req.get_json()
     
@@ -21,7 +21,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     
     query = "SELECT * FROM player WHERE player.username = @username"
     parameters = [{"name": "@username", "value": player["username"]}]
-    items = list(PlayerContainerProxy.query_items(
+    items = list(UserContainerProxy.query_items(
         query=query,
         parameters=parameters,
         enable_cross_partition_query=True
@@ -32,9 +32,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(body=json.dumps({"result": False, "msg": "Username already exists"}))
 
     try:
-        player['games_played'] = 0
-        player['total_score'] = 0
-        PlayerContainerProxy.create_item(body=player, enable_automatic_id_generation=True)
+        UserContainerProxy.create_item(body=player, enable_automatic_id_generation=True)
         body_json = json.dumps({"result": True, "msg": "OK"})
         return func.HttpResponse(body=body_json)
 

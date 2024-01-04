@@ -7,7 +7,7 @@ import os
 # Initialize Cosmos client
 MyCosmos = CosmosClient.from_connection_string(os.environ['AzureCosmosDBConnectionString'])
 PlayerDBProxy = MyCosmos.get_database_client(os.environ['DatabaseName'])
-PlayerContainerProxy = PlayerDBProxy.get_container_client(os.environ['PlayerContainer'])
+UserContainerProxy = PlayerDBProxy.get_container_client(os.environ['UserContainer'])
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Processing login request')
@@ -22,7 +22,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         ]
         
         # Run query against the Cosmos DB container
-        query_result = list(PlayerContainerProxy.query_items(
+        query_result = list(UserContainerProxy.query_items(
             query=query,
             parameters=parameters,
             enable_cross_partition_query=True

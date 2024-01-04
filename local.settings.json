@@ -5,7 +5,7 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "AzureCosmosDBConnectionString": "AccountEndpoint=https://cwk2-sy2g19.documents.azure.com:443/;AccountKey=SomtMwu6x1BVXMDx81CkByMiblU1m58x6emuKrigp70zwuAMUZXmClvmW24bpmNugW6LyBQ67t52ACDbIXumOA==;",
     "DatabaseName" : "gamecraft",
-    "PlayerContainer" : "user",
+    "UserContainer" : "user",
     "GameContainer" : "game",
     "DeploymentURL" : "https://gamecraft-backend.azurewebsites.net",
     "FunctionAppKey" : "o8QzMHM_OCrVq0IFIrFOPXJV5KSgnuXVB8w_pwoNU3ANAzFurH4fEw=="
