@@ -29,14 +29,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     # VALIDATIONS NEED TO BE DONE FOR DATA TYPE 
         
         
-        
         game_document = {
             "name" : name, 
             "devName" : devName, 
             "description": description,
             "image": image,
-            "options": options,
-            "roadmap": roadmap,
             "options": options,
             "roadmap": roadmap,
             "sharePrice" : sharePrice,
