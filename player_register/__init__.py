@@ -6,7 +6,7 @@ from azure.cosmos.exceptions import CosmosHttpResponseError
 import os
 
 MyCosmos = CosmosClient.from_connection_string(os.environ['AzureCosmosDBConnectionString'])
-PlayerDBProxy = MyCosmos.get_database_client(os.environ['Database'])
+PlayerDBProxy = MyCosmos.get_database_client(os.environ['DatabaseName'])
 PlayerContainerProxy = PlayerDBProxy.get_container_client(os.environ['PlayerContainer'])
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
