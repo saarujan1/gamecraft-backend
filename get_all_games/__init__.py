@@ -19,16 +19,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         # Fetch all game data
         games_data = list(game_container_proxy.query_items(query=query, enable_cross_partition_query=True))
 
-        # Format the response as needed
-        formatted_games = [format_game_data(game) for game in games_data]
-
-        return func.HttpResponse(json.dumps(formatted_games, ensure_ascii=False))
+        return func.HttpResponse(json.dumps({"result": True, "data": games_data[0]}))
 
     except Exception as e:
         logging.error(f"Exception: {e}")
         return func.HttpResponse(json.dumps({"error": "An error occurred"}), status_code=500)
-
-def format_game_data(game):
-    # Here you can format the game data or extract only the necessary fields
-    # For now, we'll return the game as is
-    return game

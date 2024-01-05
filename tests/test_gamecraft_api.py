@@ -10,6 +10,30 @@ local = True
 
 LOCALHOST = 'http://localhost:7071/'
 
+test_game1 = {
+            'name': 'LuisShooter2345',
+            'devName': 'UbiSoft',
+            'description': 'shooter that takes place in chicago',
+            'image': 'n/a',
+            'options': ["fire", "small", "down"],
+            'roadmap': 'roadmap',
+            'sharePrice': 2,
+            'minThreshold': '10 votes',
+            'revenueSharing': 12,
+        }
+
+test_game2 = {
+            'name': 'LuisShooter234',
+            'devName': 'UbiSof',
+            'description': 'shooter that takes place in chicag',
+            'image': 'n/',
+            'options': ["fire", "small"],
+            'roadmap': 'roadma',
+            'sharePrice': 1,
+            'minThreshold': '12 votes',
+            'revenueSharing': 15,
+        }
+
 
 class TestUserRegister(unittest.TestCase):
 
@@ -40,13 +64,13 @@ class TestUserLogin(unittest.TestCase):
     else:
         TEST_URL = "https://gamecraft-backend.azurewebsites.net/user_login?code=Yg9fPNSO6evj2mooNDCwJ7vr4nGv_xmX40Pd-PuUmMW4AzFuOZHwuQ=="
 
-    def test_user_register(self):
+    def test_user_login(self):
         payload = {
             'username': 'saarujan123',
-            'password' : 'password123',
+            'password': 'password123',
         }
         json_payload = json.dumps(payload)
-        response = requests.post(self.TEST_URL, data=json_payload)
+        response = requests.get(self.TEST_URL, data=json_payload)
         self.assertEqual(response.status_code, 200)
         # More assertions can be added here based on the expected response
 
@@ -59,24 +83,32 @@ class TestSubmitGame(unittest.TestCase):
         TEST_URL = "https://gamecraft-backend.azurewebsites.net/submit_game?code=cPs-op-r7rAFOF_eKXg08jmTiwjRyN1s6gA_dOBKfp5lAzFuM4CODQ=="
 
     def test_submit_game(self):
-        payload = {
-            'name': 'LuisShooter2345',
-            'devName': 'UbiSoft',
-            'description': 'shooter that takes place in chicago',
-            'image': 'n/a',
-            'options': ["fire", "small", "down"],
-            'roadmap': 'roadmap',
-            'sharePrice': 2,
-            'minThreshold': '10 votes',
-            'revenueSharing': 12,
-        }
+        payload = test_game1
         json_payload = json.dumps(payload)
         response = requests.post(self.TEST_URL, data=json_payload)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(200, response.status_code)
+        # More assertions can be added here based on the expected response
+
+# test wierd cuz of id
+class TestUpdateGame(unittest.TestCase):
+    if local:
+        TEST_URL = LOCALHOST + 'game/update'
+    else:
+        TEST_URL = "https://gamecraft-backend.azurewebsites.net/submit_game?code=cPs-op-r7rAFOF_eKXg08jmTiwjRyN1s6gA_dOBKfp5lAzFuM4CODQ=="
+    def test_update_game(self):
+
+        r = requests.get(LOCALHOST + "game/getall")
+        payload = r.json()['data']
+        payload.update(test_game2)
+        json_payload = json.dumps(payload)
+        response = requests.put(self.TEST_URL, data=json_payload)
+
+        self.assertEqual(200, response.status_code)
         # More assertions can be added here based on the expected response
 
 
 # Define the test class for getting games
+# currently only tests the first game but tbh why would the rest not work?
 class TestGetGames(unittest.TestCase):
 
     if local:
@@ -86,8 +118,18 @@ class TestGetGames(unittest.TestCase):
 
     def test_get_games(self):
         response = requests.get(self.TEST_URL)  # Use GET since it's "get_all_games"
-        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(response.json()['result'], True)
+
+        game = response.json()['data']
+        del game['_etag'], game['_rid'], game['_self'], game['_ts'], game['id'], game['_attachments']
+
+        self.assertEqual(game, test_game1)
         # More assertions can be added here based on the expected response
+
+
+
+
 
 # Create a test suite combining all tests
 def suite():

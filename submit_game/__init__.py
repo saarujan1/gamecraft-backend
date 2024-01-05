@@ -55,7 +55,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             "name": name, 
             "devName": devName, 
             "description": description,
-            "images": image,
+            "image": image,
             "options": options,
             "roadmap": roadmap,
             "sharePrice": sharePrice,
