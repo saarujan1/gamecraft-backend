@@ -4,24 +4,41 @@ import requests
 from azure.cosmos import CosmosClient
 
 # Define the test class for submitting games
+
+
+local = True
+
+LOCALHOST = 'http://localhost:7071/'
+
+
 class TestUserRegister(unittest.TestCase):
-    TEST_URL = "https://gamecraft-backend.azurewebsites.net/user_register?code=LB8AZj2jaF-kvYrWcqpm9ibnAANp_DIdVhFnWd4dhQ7aAzFutcScfw=="
+
+    if local:
+        TEST_URL = LOCALHOST + 'user/register'
+    else:
+        # change this to url once the function have been deployed on azure
+        TEST_URL = "https://gamecraft-backend.azurewebsites.net/user_register?code=LB8AZj2jaF-kvYrWcqpm9ibnAANp_DIdVhFnWd4dhQ7aAzFutcScfw=="
 
     def test_user_register(self):
         payload = {
             'username': 'saarujan123',
-            'password' : 'password123',
-            'usertype' : 'dev'
+            'password': 'password123',
+            'usertype': 'dev'
 
         }
         json_payload = json.dumps(payload)
         response = requests.post(self.TEST_URL, data=json_payload)
         self.assertEqual(response.status_code, 200)
         # More assertions can be added here based on the expected response
+
 
 # Define the test class for submitting games
 class TestUserLogin(unittest.TestCase):
-    TEST_URL = "https://gamecraft-backend.azurewebsites.net/user_login?code=Yg9fPNSO6evj2mooNDCwJ7vr4nGv_xmX40Pd-PuUmMW4AzFuOZHwuQ=="
+
+    if local:
+        TEST_URL = LOCALHOST + 'user/login'
+    else:
+        TEST_URL = "https://gamecraft-backend.azurewebsites.net/user_login?code=Yg9fPNSO6evj2mooNDCwJ7vr4nGv_xmX40Pd-PuUmMW4AzFuOZHwuQ=="
 
     def test_user_register(self):
         payload = {
@@ -33,9 +50,13 @@ class TestUserLogin(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         # More assertions can be added here based on the expected response
 
+
 # Define the test class for submitting games
 class TestSubmitGame(unittest.TestCase):
-    TEST_URL = "https://gamecraft-backend.azurewebsites.net/submit_game?code=cPs-op-r7rAFOF_eKXg08jmTiwjRyN1s6gA_dOBKfp5lAzFuM4CODQ=="
+    if local:
+        TEST_URL = LOCALHOST + 'game/submit'
+    else:
+        TEST_URL = "https://gamecraft-backend.azurewebsites.net/submit_game?code=cPs-op-r7rAFOF_eKXg08jmTiwjRyN1s6gA_dOBKfp5lAzFuM4CODQ=="
 
     def test_submit_game(self):
         payload = {
@@ -54,9 +75,14 @@ class TestSubmitGame(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         # More assertions can be added here based on the expected response
 
+
 # Define the test class for getting games
 class TestGetGames(unittest.TestCase):
-    TEST_URL = "https://gamecraft-backend.azurewebsites.net/get_all_games?code=AYy_xEePSR3Dqo6GxoHaOmV0bIHG4gm0hJyb4SP6UvaRAzFu6YaOLw=="
+
+    if local:
+        TEST_URL = LOCALHOST + 'game/getall'
+    else:
+        TEST_URL = "https://gamecraft-backend.azurewebsites.net/get_all_games?code=AYy_xEePSR3Dqo6GxoHaOmV0bIHG4gm0hJyb4SP6UvaRAzFu6YaOLw=="
 
     def test_get_games(self):
         response = requests.get(self.TEST_URL)  # Use GET since it's "get_all_games"

@@ -8,7 +8,7 @@ import os
 cosmos_client = CosmosClient.from_connection_string(os.environ['AzureCosmosDBConnectionString'])
 player_db_proxy = cosmos_client.get_database_client(os.environ['DatabaseName'])
 player_container_proxy = player_db_proxy.get_container_client(os.environ['UserContainer'])
-prompt_container_proxy = player_db_proxy.get_container_client(os.environ['PromptContainer'])
+prompt_container_proxy = player_db_proxy.get_container_client(os.environ['GameContainer'])
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Processing get prompts request')

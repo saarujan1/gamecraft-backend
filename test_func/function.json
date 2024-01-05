@@ -8,8 +8,7 @@
       "name": "req",
       "methods": [
         "get"
-      ],
-      "route": "game/getall"
+      ]
     },
     {
       "type": "http",
