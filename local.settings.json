@@ -8,7 +8,7 @@
     "UserContainer" : "users",
     "GameContainer" : "games",
     "DeploymentURL" : "https://gamecraft-backend.azurewebsites.net",
-    "FunctionAppKey" : "o8QzMHM_OCrVq0IFIrFOPXJV5KSgnuXVB8w_pwoNU3ANAzFurH4fEw==",
+    "FunctionAppKey" : "3LQBt84tTmZSvy-0SeVb6PbHH3a8-KudnjrvBebmysaSAzFutO8Gkg==",
     "BlobConnectionString": "DefaultEndpointsProtocol=https;AccountName=gamecraftstore;AccountKey=dONK8M0EDA1Jnw6124xIjvxlu8CO1f3oN9l6TbiAmMgksmlpeH86nR6G8ZIJwEoTepnJ75NuZ6R1+AStgwgetQ==;EndpointSuffix=core.windows.net"
   }
 }
