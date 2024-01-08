@@ -14,8 +14,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     user = req.get_json()
 
-    user['created_games'] = '[]'
-    user['subscribed_games'] = '[]'
+    user['created_games'] = []
+    user['subscribed_games'] = []
 
     print(user)
     

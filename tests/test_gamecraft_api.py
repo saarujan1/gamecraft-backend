@@ -46,7 +46,7 @@ class TestUserRegister(unittest.TestCase):
 
     def test_user_register(self):
         payload = {
-            'username': 'saarujan5555',
+            'username': 'saarujan555',
             'password': 'password123',
         }
         headers = {
@@ -171,6 +171,27 @@ class TestGetImage(unittest.TestCase):
         response = requests.get(self.TEST_URL, data=json_payload, headers=headers)
 
         return 0
+
+
+class TestSubscribe(unittest.TestCase):
+    if local:
+        TEST_URL = LOCALHOST + 'subscribe'
+    else:
+        TEST_URL = "https://gamecraftfunc.azurewebsites.net/subscribe"
+
+    def test_subscribe(self):
+
+        payload = {
+            'username': 'saarujan555',
+            'game_id': 'b38b929c-37f4-4367-be4c-8c48d9bcc159'
+        }
+        headers = {
+            'Content-Type': 'application/json',
+            'X-Functions-Key': KEY
+        }
+
+        response = requests.post(self.TEST_URL, data=json.dumps(payload), headers=headers)
+        print(response.json())
 
 
 # Create a test suite combining all tests

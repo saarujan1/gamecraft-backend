@@ -20,7 +20,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         devName = game['devName']
         description = game['description']
         image = game['image']
-        subscribers = '[]'
         options = game['options']
         roadmap = game['roadmap']
         sharePrice = game['sharePrice']
@@ -57,7 +56,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             "devName": devName, 
             "description": description,
             "image": image,
-            "subscribers": subscribers,
+            "subscribers": [],
             "options": options,
             "roadmap": roadmap,
             "sharePrice": sharePrice,
