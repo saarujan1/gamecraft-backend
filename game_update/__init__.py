@@ -14,8 +14,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     game = req.get_json()
 
-    return func.HttpResponse(status_code=200)
-
     try:
 
         # Query to get selected game
