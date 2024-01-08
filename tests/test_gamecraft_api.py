@@ -1,3 +1,4 @@
+import os
 import unittest
 import json
 import requests
@@ -5,7 +6,7 @@ from azure.cosmos import CosmosClient
 # Define the test class for submitting games
 
 
-local = False
+local = True
 
 LOCALHOST = 'http://localhost:7071/'
 
@@ -39,13 +40,13 @@ class TestUserRegister(unittest.TestCase):
     FUNCTION_KEY = "3LQBt84tTmZSvy-0SeVb6PbHH3a8-KudnjrvBebmysaSAzFutO8Gkg=="  # Your function key
 
     if local:
-        TEST_URL = LOCALHOST + 'user/login'
+        TEST_URL = LOCALHOST + 'user/register'
     else:
         TEST_URL = "https://gamecraftfunc.azurewebsites.net/user/register"
 
-    def test_user_login(self):
+    def test_user_register(self):
         payload = {
-            'username': 'saarujan010101',
+            'username': 'saarujan55555',
             'password': 'password123',
         }
         headers = {
@@ -54,6 +55,7 @@ class TestUserRegister(unittest.TestCase):
         }
         json_payload = json.dumps(payload)
         response = requests.get(self.TEST_URL, data=json_payload, headers=headers)  # Use POST for login
+        print(response.json())
         self.assertEqual(response.status_code, 200)
 
         # More assertions can be added here based on the expected response
