@@ -14,19 +14,27 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     game = req.get_json()
 
+    logging.info("--------------------------------------------------------------")
+    logging.info(str(game['id']))
+    logging.info("--------------------------------------------------------------")
+
     try:
 
         # Query to get selected game
-        query = "SELECT * from games where id = " + str(game['id'])
+        query = f"SELECT * FROM c WHERE c.id = '{game['id']}'"
+
+
 
         old_game = list(game_container_proxy.query_items(query=query, enable_cross_partition_query=True))
+
+        logging.info(old_game[0])
 
         # if the updated json doesn't have the same keys then it won't work
         if old_game[0].keys() == game.keys():
             # replace game with updated data
             game_container_proxy.replace_item(item=old_game[0], body=game)
 
-            return func.HttpResponse(json.dumps(game, ensure_ascii=False, status_code=200))
+            return func.HttpResponse(json.dumps(game, ensure_ascii=False), status_code=200)
         else:
             raise Exception("Updated game in wrong format")
 

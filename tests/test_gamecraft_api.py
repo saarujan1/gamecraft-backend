@@ -106,9 +106,10 @@ class TestUpdateGame(unittest.TestCase):
     def test_update_game(self):
 
         r = requests.get(LOCALHOST + "game/getall")
-        payload = r.json()['data']
+        payload = r.json()['data'][0]
         payload.update(test_game2)
         json_payload = json.dumps(payload)
+        print(payload)
         response = requests.put(self.TEST_URL, data=json_payload)
 
         self.assertEqual(200, response.status_code)
