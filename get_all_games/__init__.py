@@ -19,7 +19,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         # Fetch all game data
         games_data = list(game_container_proxy.query_items(query=query, enable_cross_partition_query=True))
 
-        return func.HttpResponse(json.dumps({"result": True, "data": games_data[0]}))
+        return func.HttpResponse(json.dumps({"result": True, "data": games_data}))
 
     except Exception as e:
         logging.error(f"Exception: {e}")
