@@ -41,13 +41,12 @@ class TestUserRegister(unittest.TestCase):
         TEST_URL = LOCALHOST + 'user/register'
     else:
         # change this to url once the function have been deployed on azure
-        TEST_URL = "https://gamecraft-backend.azurewebsites.net/user_register?code=LB8AZj2jaF-kvYrWcqpm9ibnAANp_DIdVhFnWd4dhQ7aAzFutcScfw=="
+        TEST_URL = "https://gamecraft-backend.azurewebsites.net/user/register"
 
     def test_user_register(self):
         payload = {
             'username': 'saarujan123',
             'password': 'password123',
-            'usertype': 'dev'
 
         }
         json_payload = json.dumps(payload)
