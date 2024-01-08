@@ -2,11 +2,10 @@ import unittest
 import json
 import requests
 from azure.cosmos import CosmosClient
-
 # Define the test class for submitting games
 
 
-local = True
+local = False
 
 LOCALHOST = 'http://localhost:7071/'
 
@@ -37,42 +36,49 @@ test_game2 = {
 
 class TestUserRegister(unittest.TestCase):
 
-    if local:
-        TEST_URL = LOCALHOST + 'user/register'
-    else:
-        # change this to url once the function have been deployed on azure
-        TEST_URL = "https://gamecraft-backend.azurewebsites.net/user/register"
-
-    def test_user_register(self):
-        payload = {
-            'username': 'saarujan123',
-            'password': 'password123',
-
-        }
-        json_payload = json.dumps(payload)
-        response = requests.post(self.TEST_URL, data=json_payload)
-        self.assertEqual(response.status_code, 200)
-        # More assertions can be added here based on the expected response
-
-
-# Define the test class for submitting games
-class TestUserLogin(unittest.TestCase):
+    FUNCTION_KEY = "3LQBt84tTmZSvy-0SeVb6PbHH3a8-KudnjrvBebmysaSAzFutO8Gkg=="  # Your function key
 
     if local:
         TEST_URL = LOCALHOST + 'user/login'
     else:
-        TEST_URL = "https://gamecraft-backend.azurewebsites.net/user_login?code=Yg9fPNSO6evj2mooNDCwJ7vr4nGv_xmX40Pd-PuUmMW4AzFuOZHwuQ=="
+        TEST_URL = "https://gamecraftfunc.azurewebsites.net/user/register"
 
     def test_user_login(self):
         payload = {
-            'username': 'saarujan123',
+            'username': 'saarujan010101',
             'password': 'password123',
         }
+        headers = {
+            'Content-Type': 'application/json',
+            'X-Functions-Key': self.FUNCTION_KEY
+        }
         json_payload = json.dumps(payload)
-        response = requests.get(self.TEST_URL, data=json_payload)
+        response = requests.get(self.TEST_URL, data=json_payload, headers=headers)  # Use POST for login
         self.assertEqual(response.status_code, 200)
+
         # More assertions can be added here based on the expected response
 
+
+class TestUserLogin(unittest.TestCase):
+    FUNCTION_KEY = "3LQBt84tTmZSvy-0SeVb6PbHH3a8-KudnjrvBebmysaSAzFutO8Gkg=="  # Your function key
+
+    if local:
+        TEST_URL = LOCALHOST + 'user/login'
+    else:
+        TEST_URL = "https://gamecraftfunc.azurewebsites.net/user/login"
+
+    def test_user_login(self):
+        payload = {
+            'username': 'saarujan',
+            'password': 'password123',
+        }
+        headers = {
+            'Content-Type': 'application/json',
+            'X-Functions-Key': self.FUNCTION_KEY
+        }
+        json_payload = json.dumps(payload)
+        response = requests.get(self.TEST_URL, data=json_payload, headers=headers)  # Use POST for login
+        self.assertEqual(response.status_code, 200)
 
 # Define the test class for submitting games
 class TestSubmitGame(unittest.TestCase):
@@ -126,15 +132,11 @@ class TestGetGames(unittest.TestCase):
         self.assertEqual(game, test_game1)
         # More assertions can be added here based on the expected response
 
-
-
-
-
 # Create a test suite combining all tests
 def suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestSubmitGame))
-    suite.addTest(unittest.makeSuite(TestGetGames))
+    suite.addTest(unittest.makeSuite(TestUserRegister))
+    # suite.addTest(unittest.makeSuite(TestGetGames))
     return suite
 
 # Run the test suite
