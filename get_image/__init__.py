@@ -13,6 +13,7 @@ GameDBProxy = cosmos_client.get_database_client(os.environ['DatabaseName'])
 GameContainerProxy = GameDBProxy.get_container_client(os.environ['GameContainer'])
 ServiceClient = BlobServiceClient.from_connection_string(os.environ['BlobConnectionString'])
 
+
 # returns an image given the image id
 def main(req: func.HttpRequest) -> func.HttpResponse:
 
@@ -20,7 +21,8 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     uid = req.get_json()['id']
 
-    blob_client = ServiceClient.get_blob_client("images", uid)
+    blob_client = ServiceClient.get_blob_client("images", '5')
+
 
 
     try:

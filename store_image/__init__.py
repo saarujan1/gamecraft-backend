@@ -1,11 +1,12 @@
 import io
 import json
 import logging
+import os
+import uuid
+
 import azure.functions as func
 from azure.cosmos import CosmosClient
-import os
-from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
-import uuid
+from azure.storage.blob import BlobServiceClient
 
 # Initialize Cosmos DB client
 cosmos_client = CosmosClient.from_connection_string(os.environ['AzureCosmosDBConnectionString'])
@@ -18,16 +19,17 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     logging.info('Uploading image')
 
-    image = req.get_body()
+    image = req.files['file']
 
     blob_name = str(uuid.uuid4())
 
-    blob_client = ServiceClient.get_blob_client("items", blob_name)
+    blob_client = ServiceClient.get_blob_client("images", blob_name)
 
-    stream = io.BytesIO(image)
+
+
 
     try:
-        blob_client.upload_blob(stream)
+        blob_client.upload_blob(image)
         return func.HttpResponse(json.dumps({"result": True, "uri": blob_client.url}))
     except Exception as e:
         return func.HttpResponse(json.dumps({"result": False, "msg": "Image upload failed"}))
