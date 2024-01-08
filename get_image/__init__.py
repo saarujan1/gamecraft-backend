@@ -14,12 +14,12 @@ GameContainerProxy = GameDBProxy.get_container_client(os.environ['GameContainer'
 ServiceClient = BlobServiceClient.from_connection_string(os.environ['BlobConnectionString'])
 
 
-# returns an image given the image id
+# returns and image uri + sas token
 def main(req: func.HttpRequest) -> func.HttpResponse:
 
-    logging.info('Getting image')
+    logging.info('Getting image url')
 
-    uid = req.get_json()['id']
+
 
     blob_client = ServiceClient.get_blob_client("images", '5')
 
