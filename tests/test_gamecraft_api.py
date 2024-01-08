@@ -10,6 +10,8 @@ local = True
 
 LOCALHOST = 'http://localhost:7071/'
 
+KEY = "3LQBt84tTmZSvy-0SeVb6PbHH3a8-KudnjrvBebmysaSAzFutO8Gkg=="
+
 test_game1 = {
             'name': 'LuisShooter2345',
             'devName': 'UbiSoft',
@@ -37,8 +39,6 @@ test_game2 = {
 
 class TestUserRegister(unittest.TestCase):
 
-    FUNCTION_KEY = "3LQBt84tTmZSvy-0SeVb6PbHH3a8-KudnjrvBebmysaSAzFutO8Gkg=="  # Your function key
-
     if local:
         TEST_URL = LOCALHOST + 'user/register'
     else:
@@ -46,12 +46,12 @@ class TestUserRegister(unittest.TestCase):
 
     def test_user_register(self):
         payload = {
-            'username': 'saarujan55555',
+            'username': 'saarujan5555',
             'password': 'password123',
         }
         headers = {
             'Content-Type': 'application/json',
-            'X-Functions-Key': self.FUNCTION_KEY
+            'X-Functions-Key': KEY
         }
         json_payload = json.dumps(payload)
         response = requests.get(self.TEST_URL, data=json_payload, headers=headers)  # Use POST for login
@@ -62,7 +62,6 @@ class TestUserRegister(unittest.TestCase):
 
 
 class TestUserLogin(unittest.TestCase):
-    FUNCTION_KEY = "3LQBt84tTmZSvy-0SeVb6PbHH3a8-KudnjrvBebmysaSAzFutO8Gkg=="  # Your function key
 
     if local:
         TEST_URL = LOCALHOST + 'user/login'
@@ -76,7 +75,7 @@ class TestUserLogin(unittest.TestCase):
         }
         headers = {
             'Content-Type': 'application/json',
-            'X-Functions-Key': self.FUNCTION_KEY
+            'X-Functions-Key': KEY
         }
         json_payload = json.dumps(payload)
         response = requests.get(self.TEST_URL, data=json_payload, headers=headers)  # Use POST for login
@@ -84,10 +83,11 @@ class TestUserLogin(unittest.TestCase):
 
 # Define the test class for submitting games
 class TestSubmitGame(unittest.TestCase):
+
     if local:
         TEST_URL = LOCALHOST + 'game/submit'
     else:
-        TEST_URL = "https://gamecraft-backend.azurewebsites.net/submit_game?code=cPs-op-r7rAFOF_eKXg08jmTiwjRyN1s6gA_dOBKfp5lAzFuM4CODQ=="
+        TEST_URL = "https://gamecraftfunc.azurewebsites.net/game/submit"
 
     def test_submit_game(self):
         payload = test_game1
@@ -101,7 +101,7 @@ class TestUpdateGame(unittest.TestCase):
     if local:
         TEST_URL = LOCALHOST + 'game/update'
     else:
-        TEST_URL = "https://gamecraft-backend.azurewebsites.net/submit_game?code=cPs-op-r7rAFOF_eKXg08jmTiwjRyN1s6gA_dOBKfp5lAzFuM4CODQ=="
+        TEST_URL = "https://gamecraftfunc.azurewebsites.net/game/update"
     def test_update_game(self):
 
         r = requests.get(LOCALHOST + "game/getall")
@@ -121,7 +121,7 @@ class TestGetGames(unittest.TestCase):
     if local:
         TEST_URL = LOCALHOST + 'game/getall'
     else:
-        TEST_URL = "https://gamecraft-backend.azurewebsites.net/get_all_games?code=AYy_xEePSR3Dqo6GxoHaOmV0bIHG4gm0hJyb4SP6UvaRAzFu6YaOLw=="
+        TEST_URL = "https://gamecraftfunc.azurewebsites.net/game/getall"
 
     def test_get_games(self):
         response = requests.get(self.TEST_URL)  # Use GET since it's "get_all_games"
@@ -133,6 +133,43 @@ class TestGetGames(unittest.TestCase):
 
         self.assertEqual(game, test_game1)
         # More assertions can be added here based on the expected response
+
+
+class TestStoreImage(unittest.TestCase):
+
+    if local:
+        TEST_URL = LOCALHOST + 'image/store'
+    else:
+        TEST_URL = "https://gamecraftfunc.azurewebsites.net/image/store"
+
+    files = {'file': open('test.png', 'rb')}
+
+    def test_store_image(self):
+        response = requests.post(self.TEST_URL, files=self.files)
+        return 0
+
+
+class TestGetImage(unittest.TestCase):
+    if local:
+        TEST_URL = LOCALHOST + 'image/get'
+    else:
+        TEST_URL = "https://gamecraftfunc.azurewebsites.net/image/get"
+
+    def test_get_image(self):
+
+        payload = {
+            'id': 'test.png',
+        }
+        headers = {
+            'Content-Type': 'application/json',
+            'X-Functions-Key': KEY
+        }
+
+        response = requests.get(self.TEST_URL, data=json_payload, headers=headers)
+
+        return 0
+
+
 
 # Create a test suite combining all tests
 def suite():
