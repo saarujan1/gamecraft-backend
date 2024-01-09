@@ -37,9 +37,6 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         if revenueSharing <= 10:
             return func.HttpResponse(json.dumps({"result": False, "msg": "Revenue sharing must be above 10"}), status_code=400)
 
-        if len(set(options)) != len(options):
-            return func.HttpResponse(json.dumps({"result": False, "msg": "Options must be unique"}), status_code=400)
-
         # Check if the game name already exists
         query = "SELECT * FROM c WHERE c.name = @name"
         items = list(GameContainerProxy.query_items(
