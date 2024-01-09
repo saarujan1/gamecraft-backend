@@ -8,8 +8,11 @@ from azure.cosmos import CosmosClient
 MyCosmos = CosmosClient.from_connection_string(
     os.environ['AzureCosmosDBConnectionString'])
 PlayerDBProxy = MyCosmos.get_database_client(os.environ['DatabaseName'])
+game_db_proxy = MyCosmos.get_database_client(os.environ['DatabaseName'])
 UserContainerProxy = PlayerDBProxy.get_container_client(
     os.environ['UserContainer'])
+GameContainerProxy = game_db_proxy.get_container_client(
+    os.environ['GameContainer'])
 
 
 def subscribe_user(username, game_id):
@@ -27,7 +30,19 @@ def subscribe_user(username, game_id):
     if 'subscribed_games' in user and game_id in user['subscribed_games']:
         return {"result": False, "msg": f"User '{username}' is already subscribed to the game '{game_id}'."}
 
-    # Add the game to the list of subscribed games
+    # Update the game document with the subscriber information
+    game_query = f"SELECT * FROM c WHERE c.game_id = '{game_id}'"
+    game_results = list(GameContainerProxy.query_items(
+        query=game_query, enable_cross_partition_query=True))
+
+    if game_results:
+        game = game_results[0]
+        if 'subscribers' not in game:
+            game['subscribers'] = []
+        game['subscribers'].append(username)
+        GameContainerProxy.upsert_item(game)
+
+    # Add the game to the list of subscribed games in the user document
     if 'subscribed_games' not in user:
         user['subscribed_games'] = []
     user['subscribed_games'].append(game_id)
