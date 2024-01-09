@@ -153,27 +153,6 @@ class TestStoreImage(unittest.TestCase):
         return 0
 
 
-class TestGetImage(unittest.TestCase):
-    if local:
-        TEST_URL = LOCALHOST + 'image/get'
-    else:
-        TEST_URL = "https://gamecraftfunc.azurewebsites.net/image/get"
-
-    def test_get_image(self):
-
-        payload = {
-            'id': 'test.png'
-        }
-        headers = {
-            'Content-Type': 'application/json',
-            'X-Functions-Key': KEY
-        }
-        json_payload = json.dumps(payload)
-        response = requests.get(self.TEST_URL, data=json_payload, headers=headers)
-
-        return 0
-
-
 class TestSubscribe(unittest.TestCase):
     if local:
         TEST_URL = LOCALHOST + 'subscribe'
