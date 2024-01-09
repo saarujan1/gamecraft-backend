@@ -43,7 +43,21 @@ def subscribe_user(username, game_id):
     if not game_results:
         return {"result": False, "msg": f"Game ID '{game_id}' not found."}
 
-    return {"result": True, "msg": "User and Game ID exist."}
+    # return {"result": True, "msg": "User and Game ID exist."}
+
+    game_document = game_results[0]
+    subscribers = game_document.get('subscribers', [])
+
+    if username not in subscribers:
+        subscribers.append(username)
+        game_document['subscribers'] = subscribers
+
+        # Update the document in the game container
+        GameContainerProxy.replace_item(item=game_document, body=game_document)
+
+        return {"result": True, "msg": f"User '{username}' subscribed to Game ID '{game_id}'."}
+    else:
+        return {"result": False, "msg": f"User '{username}' is already subscribed to Game ID '{game_id}'."}
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
