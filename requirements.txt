@@ -4,4 +4,4 @@
 
 azure-functions
 azure-cosmos
-azure-storage-blob
+azure-storage-blob== 12.8.1

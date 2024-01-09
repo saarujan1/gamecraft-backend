@@ -4,19 +4,30 @@ import os
 import azure.functions as func
 from azure.cosmos import CosmosClient
 
+config = {
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "AzureCosmosDBConnectionString": "AccountEndpoint=https://gamecraftdb.documents.azure.com:443/;AccountKey=g5pNMi2ICWXUuIpGAcSAwI9rRkxNHxQ9lgKa0ifSvAJR6QSl6t6C4GFRqwG5ogyXJyDSRzvQDFwbACDbvzlF0g==;",
+    "DatabaseName": "gamecraftdata",
+    "UserContainer": "users",
+    "GameContainer": "games",
+    "DeploymentURL": "https://gamecraftfunc.azurewebsites.net",
+    "FunctionAppKey": "3LQBt84tTmZSvy-0SeVb6PbHH3a8-KudnjrvBebmysaSAzFutO8Gkg==",
+    "BlobConnectionString": "DefaultEndpointsProtocol=https;AccountName=gamecraftstore;AccountKey=dONK8M0EDA1Jnw6124xIjvxlu8CO1f3oN9l6TbiAmMgksmlpeH86nR6G8ZIJwEoTepnJ75NuZ6R1+AStgwgetQ==;EndpointSuffix=core.windows.net"
+}
+
 # Initialize Cosmos client
 MyCosmos = CosmosClient.from_connection_string(
-    os.environ['AzureCosmosDBConnectionString'])
-PlayerDBProxy = MyCosmos.get_database_client(os.environ['DatabaseName'])
-game_db_proxy = MyCosmos.get_database_client(os.environ['DatabaseName'])
+    config['AzureCosmosDBConnectionString'])
+PlayerDBProxy = MyCosmos.get_database_client(config['DatabaseName'])
+game_db_proxy = MyCosmos.get_database_client(config['DatabaseName'])
 UserContainerProxy = PlayerDBProxy.get_container_client(
-    os.environ['UserContainer'])
+    config['UserContainer'])
 GameContainerProxy = game_db_proxy.get_container_client(
-    os.environ['GameContainer'])
+    config['GameContainer'])
 
 
 def subscribe_user(username, game_id):
-    # Retrieve user document from Cosmos DB
     user_query = f"SELECT * FROM c WHERE c.username = '{username}'"
     user_results = list(UserContainerProxy.query_items(
         query=user_query, enable_cross_partition_query=True))
@@ -24,33 +35,15 @@ def subscribe_user(username, game_id):
     if not user_results:
         return {"result": False, "msg": f"User '{username}' not found."}
 
-    user = user_results[0]
-
-    # Check if the game is already subscribed
-    if 'subscribed_games' in user and game_id in user['subscribed_games']:
-        return {"result": False, "msg": f"User '{username}' is already subscribed to the game '{game_id}'."}
-
-    # Update the game document with the subscriber information
-    game_query = f"SELECT * FROM c WHERE c.game_id = '{game_id}'"
+    # Check if the game ID exists in the game container
+    game_query = f"SELECT * FROM c WHERE c.id = '{game_id}'"
     game_results = list(GameContainerProxy.query_items(
         query=game_query, enable_cross_partition_query=True))
 
-    if game_results:
-        game = game_results[0]
-        if 'subscribers' not in game:
-            game['subscribers'] = []
-        game['subscribers'].append(username)
-        GameContainerProxy.upsert_item(game)
+    if not game_results:
+        return {"result": False, "msg": f"Game ID '{game_id}' not found."}
 
-    # Add the game to the list of subscribed games in the user document
-    if 'subscribed_games' not in user:
-        user['subscribed_games'] = []
-    user['subscribed_games'].append(game_id)
-
-    # Update the user document in Cosmos DB
-    UserContainerProxy.upsert_item(user)
-
-    return {"result": True, "msg": "OK"}
+    return {"result": True, "msg": "User and Game ID exist."}
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
@@ -73,4 +66,4 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(str(e), status_code=400)
     except Exception as e:
         logging.error(str(e))
-        return func.HttpResponse("An error occurred while processing the request.", status_code=500)
+        return func.HttpResponse(str(e), status_code=500)
