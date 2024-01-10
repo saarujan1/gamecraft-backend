@@ -26,8 +26,9 @@ test_game1 = {
 }
 
 test_game2 = {
-    'name': 'LuisShooter234',
-    'devName': 'UbiSof',
+    'id': '35a82949-313f-4d38-8d64-6761a36a1a78',
+    'name': 'Test2',
+    'devName': 'Thing',
     'description': 'shooter that takes place in chicag',
     'image': 'n/',
     'options': ["fire", "small"],
@@ -105,12 +106,17 @@ class TestUpdateGame(unittest.TestCase):
 
     def test_update_game(self):
 
-        r = requests.get(LOCALHOST + "game/getall")
-        payload = r.json()['data'][0]
-        payload.update(test_game2)
+        headers = {
+            'Content-Type': 'application/json',
+            'X-Functions-Key': KEY
+        }
+
+        r = requests.get("https://gamecraftfunc.azurewebsites.net/game/getall", headers=headers)
+
+        payload = test_game2
         json_payload = json.dumps(payload)
         print(payload)
-        response = requests.put(self.TEST_URL, data=json_payload)
+        response = requests.put(self.TEST_URL, data=json_payload, headers=headers)
 
         self.assertEqual(200, response.status_code)
         # More assertions can be added here based on the expected response
