@@ -10,7 +10,7 @@
         "get",
         "post"
       ],
-      "route": "user/register"
+      "route": "vote/game"
     },
     {
       "type": "http",
