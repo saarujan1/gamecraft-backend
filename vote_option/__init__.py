@@ -30,5 +30,4 @@ def vote_option(req: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(body=json.dumps({"result": True, "msg": "Option vote updated successfully"}))
 
     except Exception as e:
-        logging.error(f"Error: {str(e)}")
         return func.HttpResponse(body=json.dumps({"result": False, "msg": "Failed to process option vote"}))
