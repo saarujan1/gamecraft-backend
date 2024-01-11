@@ -35,6 +35,11 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
         if revenueSharing <= 10:
             return func.HttpResponse(json.dumps({"result": False, "msg": "Revenue sharing must be above 10"}), status_code=400)
+        
+        # Validate options (expecting an array of options)
+        options = game.get('options', [])
+        if not isinstance(options, list) or len(options) > 3:
+            return func.HttpResponse(json.dumps({"result": False, "msg": "Up to three options are allowed"}), status_code=400)
 
         # Check if the game name already exists
         query = "SELECT * FROM c WHERE c.name = @name"
@@ -47,19 +52,21 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         if items:
             return func.HttpResponse(json.dumps({"result": False, "msg": "Game name already exists"}), status_code=400)
 
+        # Prepare game document
         game_document = {
             "id": str(uuid.uuid4()),
-            "name": name, 
-            "devName": devName, 
-            "description": description,
-            "image": image,
+            "name": game['name'], 
+            "devName": game['devName'], 
+            "description": game['description'],
+            "image": game['image'],
             "subscribers": [],
             "options": options,
-            "roadmap": roadmap,
-            "sharePrice": sharePrice,
-            "minThreshold": minThreshold,
-            "revenueSharing": revenueSharing
+            "roadmap": game['roadmap'],
+            "sharePrice": game['sharePrice'],
+            "minThreshold": game['minThreshold'],
+            "revenueSharing": game['revenueSharing']
         }
+
 
         # Insert the game document into the Cosmos DB container
         GameContainerProxy.create_item(game_document)
